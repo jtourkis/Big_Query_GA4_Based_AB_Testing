@@ -7516,7 +7516,17 @@ a.anchor-link {
 <li><p>Be careful how you interpret Secondary metrics. If we look at everything under the sun, there is a high likelihood you will find something that looks like an impact. To account for this, in statistics, if more than one primary metric is tested, confidence intervals are lengthened by multiple comparison adjustments like Benjamini and Hochberg. This may change your statistically significant result to not significant. If you discover something interesting in secondary metrics, best practice is to retest it as a primary metric.</p>
 </li>
 </ol>
-<p><strong>Source:</strong> <a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset">https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset</a></p>
+<p><strong>Good Sources:</strong></p>
+<ol>
+<li><p><a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset">Google Public Big Query E-Commerce Dataset Developers Guide</a></p>
+</li>
+<li><p><a href="https://exp-platform.com/abtestingintuitionbusters/">A/B Testing Intuition Busters (Kohavi et al.)</a></p>
+</li>
+<li><p><a href="http://www.stat.columbia.edu/~gelman/research/published/retropower_final.pdf"> Paper on Small Sample Size Estimate Inflation (Gelman et al)</a></p>
+</li>
+<li><p><a href="https://ai.stanford.edu/~ronnyk/2013-02CUPEDImprovingSensitivityOfControlledExperiments.pdf">Improving Sensitivity of Controlled Experiments (Kohavi et al.)</a></p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -7987,12 +7997,21 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Conclusion:</strong> Generally, our goal is to evaluate an effect size of 5% with at least .8 power. However, for this very low conversion rate, a 5% lift is impractical and has very low power. This leaves us with two options. a) Choose a higher effect size and miss out on small impacts. b) Attempt to find a metric correlated with the conversion rate of interest but with a higher estimated control rate.</p>
+<p><strong>Conclusion:</strong> For developed websites, the goal should be to evaluate an effect sizes between 1% to 5% with at least .8 power. However, for this very low conversion rate, a 5% lift is impractical and has very low power at reasonable sample sizes. This leaves us with two options. a) Choose a higher effect size and miss out on small impacts. b) Attempt to find a metric correlated with the conversion rate of interest but with a higher estimated control rate.</p>
 <p><strong>Note:</strong></p>
 <ol>
+<li><p>Whatever effect size (MDE) is chosen, it must be reasonable in light of historical experiment effects. <strong>Running under powered tests (tests without sufficient sample size) is known to inflate statistically significant effect size estimates.</strong></p>
+</li>
 <li><p>Unless experiment is run on logged in users only, time periods over which visitor activity can be linked together continue to shrink due to browser changes. Running experiments for longer than 1 month, risks double exposure to treatment and control for repeat visitors where tracking lapsed.</p>
 </li>
 <li><p>For smaller sample sizes and tiny conversion rates, traditional Wald confidence interval calculations may need to be adjusted to remain at 95%.</p>
+</li>
+</ol>
+<p><strong>Helpful Sources:</strong></p>
+<ol>
+<li><p><a href="https://exp-platform.com/abtestingintuitionbusters/">A/B Testing Intuition Busters (Kohavi et al)</a></p>
+</li>
+<li><p><a href="http://www.stat.columbia.edu/~gelman/research/published/retropower_final.pdf">Paper on Small Sample Size Estimate Inflation (Gelman et al)</a></p>
 </li>
 </ol>
 </div>
@@ -9287,6 +9306,17 @@ dtype: object</pre>
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1ea224ec">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Conclusion:</strong> When evaluating group split, we want to keep an eye out for sample ratio mismatch (SRM). This can be a sign of improper randomization. Some practitioners argue even a small mismatch can adversely impact experiment results.</p>
+<p><strong>Note:</strong> It is most effecient to use the same treatment and control size. If you have multiple treatments, visitors should be distributed so each group is the same size as the control.</p>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=66261651">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9629,6 +9659,7 @@ dtype: object</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Conclusion:</strong> There might be a slight imbalance in the engagement minutes and prior purchase count metric. The treatment mean is percentage wise is higher for the treatment than control. Other metrics appear fairly close. We may want to look into why there might be such a large difference and whether it could adversly impact results or indicate imbalance. It may be helpful to add the covariate to a regression and see if it impacts our outcome of interest.</p>
+<p><strong>CAUTION:</strong> Be careful how you use and interpret imbalances in these metrics. When estimating a treatment effect with regression, A/B test practitioners suggest repeatedly using a couple of the same highly correlated covariates not switching with every experiment. <a href="https://ai.stanford.edu/~ronnyk/2013-02CUPEDImprovingSensitivityOfControlledExperiments.pdf">Improving Sensitivity of Controlled Experiments (Kohavi et al.)</a>  I'm suggesting imbalance metrics could be added to secondary regression models to test the robustness of point estimates like in social sciences.</p>
 </div>
 </div>
 </div>
@@ -9824,7 +9855,10 @@ Calculated Difference: 0.000
 </li>
 <li><p>80% power means that if there was a true effect and we followed sample size requirements. We would expect to pick it up 80% of the time.</p>
 </li>
+<li><p>To minimize false positive rates from running many online experiments, some practitioners like Ron Kohavi suggest re-running experiments with a p-value between .01 and .05.</p>
+</li>
 </ol>
+<p><strong>Source:</strong> <a href="https://exp-platform.com/abtestingintuitionbusters/">A/B Testing Intuition Busters (Kohavi et al.)</a></p>
 </div>
 </div>
 </div>
